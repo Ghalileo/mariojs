@@ -1,3 +1,7 @@
+const force_jump = 460;
+
+
+
 
 kaboom({
     global: true, 
@@ -7,8 +11,9 @@ kaboom({
     clearColor: [0,0,1,1]
 })
 
+// Sprite Loading from Src
 loadRoot('https://i.imgur.com/')
-loadSprite('coin', 'KPO3fR9.png')
+loadSprite('coin', 'wbKxhcd.png')
 loadSprite('goomba', 'LmseqUG.png')
 loadSprite('mario','Wb1qfhK.png' )
 loadSprite('mushroom', "0wMd92p.png")
@@ -28,7 +33,7 @@ loadSprite('unbreakable-block', 'gqVoI2b.png')
 
 scene("game", () => {
 layers(['bg', 'obj', 'ui'], 'obj')
-
+// Level One
 const map = [
     '                                                                ',
     '                                                                ',
@@ -38,19 +43,62 @@ const map = [
     '                                                                ',
     '                                                                ',
     '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '===================================  ===========================',
+    '                       ^                                        ',
+    '                                                      @         ',
+    '           !   !    $                                           =',
+    '================ ==================  ========= ==================',
 ]
-
+// Sprite assignment 
 const levelCfg = {
     width: 20,
     height: 20,
-    '=': [sprite('block'), solid(), area()]
+    '=': [sprite('block'), solid(), area()],
+    '!': [sprite('goomba'), solid(), area()],
+    '^': [sprite('item-box'), solid(), area()],
+    '$': [sprite('coin')],
+    '@': [sprite('warp-pipe'), solid(), area()],
+    
 }
 
+// Score of Game
+// const scoreKeep = add([
+//     text('Test'),
+//     pos(30,6),
+//     layer('ui'),
+//     {
+//         value: 'score',
+//     }
+// ])
+
+add([text('Level' + ' Score', pos(4,6))])
+
+// Mario Sprite Rendered
+const player = add([
+    sprite('mario'), solid(), area(),
+    pos(30, 0),
+    body(),
+    origin('bot')
+])
+
+// Character Controls
+
+
+keyDown('left', ()=>{
+    player.move(-120, 0)
+})
+
+keyDown('right', ()=>{
+    player.move(120, 0)
+})
+
+keyPress('space', () => {
+    if(player.grounded()){
+        player.jump(force_jump)
+    }
+})
+// Character Controls End 
 const gameLevel = addLevel(map, levelCfg)
 
 })
+// Emulates Script
 go("game")
