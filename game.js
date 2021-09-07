@@ -43,7 +43,7 @@ const map = [
     '                                                                ',
     '                                                                ',
     '                                                                ',
-    '                       ^                                        ',
+    '                            #          ^                        ',
     '                                                      @         ',
     '           !   !    $                                           =',
     '================ ==================  ========= ==================',
@@ -54,7 +54,8 @@ const levelCfg = {
     height: 20,
     '=': [sprite('block'), solid(), area()],
     '!': [sprite('goomba'), solid(), area()],
-    '^': [sprite('item-box'), solid(), area()],
+    '^': [sprite('item-box'), solid(), area(), 'mushroom-box'],
+    '#': [sprite('item-box'), solid(), area(), 'coin-box'],
     '$': [sprite('coin')],
     '@': [sprite('warp-pipe'), solid(), area()],
     
@@ -72,22 +73,57 @@ const levelCfg = {
 
 add([text('Level' + ' Score', pos(4,6))])
 
+// Parameters for marios growth
+function big() {
+    let timer = 0
+    let isBig = false
+    return{
+        update() {
+        if(isBig) {
+            timer -= dt()
+            if (timer <= 0){
+                this.smallify()
+            }
+        }}, 
+        isBig() {
+            return isBig
+        },
+        smallify() {
+            this.scale = vec2(1) 
+            timer=0
+            isBig = false
+        },
+        biggify(time) {
+            this.sclae = vec2(2)
+            timer = time
+            isBig = true
+        }
+    }
+}
+
 // Mario Sprite Rendered
 const player = add([
     sprite('mario'), solid(), area(),
     pos(30, 0),
     body(),
+    big(),
     origin('bot')
 ])
 
+// Spawn Coins from Surpise Blocks (Work in Progress)
+player.on("headbump", (obj) => {
+    if(obj.is('coin-box')) {
+        gameLevel.spawn('$', obj.gridPos.sub(0,1))
+        destroy(obj)
+    }
+})
+
 // Character Controls
-
-
-keyDown('left', ()=>{
+keyDown('left', () => {
     player.move(-120, 0)
 })
 
-keyDown('right', ()=>{
+keyDown('right', () => {
     player.move(120, 0)
 })
 
@@ -97,6 +133,7 @@ keyPress('space', () => {
     }
 })
 // Character Controls End 
+
 const gameLevel = addLevel(map, levelCfg)
 
 })
