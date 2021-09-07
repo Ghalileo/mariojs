@@ -1,3 +1,4 @@
+
 kaboom({
     global: true, 
     fullscreen: true,
@@ -29,28 +30,27 @@ scene("game", () => {
 layers(['bg', 'obj', 'ui'], 'obj')
 
 const map = [
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '                                             ',
-    '===================================  ========',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '===================================  ===========================',
 ]
 
 const levelCfg = {
     width: 20,
     height: 20,
-    '=': [sprite('block'), solid()]
+    '=': [sprite('block'), solid(), area()]
 }
 
 const gameLevel = addLevel(map, levelCfg)
 
 })
-
-start("game")
+go("game")
