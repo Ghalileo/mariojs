@@ -34,7 +34,8 @@ loadSprite('unbreakable-block', 'gqVoI2b.png')
 scene("game", () => {
 layers(['bg', 'obj', 'ui'], 'obj')
 // Level One
-const map = [
+const map = addLevel(
+    [
     '                                                                ',
     '                                                                ',
     '                                                                ',
@@ -45,22 +46,22 @@ const map = [
     '                                                                ',
     '                            #          ^                        ',
     '                                                      @         ',
-    '           !   !    $                                           =',
-    '================ ==================  ========= ==================',
-]
+    '           !   !    $                                          =',
+    '================ ==================  ========= =================',
+],
 // Sprite assignment 
-const levelCfg = {
+ {
     width: 20,
     height: 20,
-    '=': [sprite('block'), solid(), area()],
-    '!': [sprite('goomba'), solid(), area()],
-    '^': [sprite('item-box'), solid(), area(), 'mushroom-box'],
-    '#': [sprite('item-box'), solid(), area(), 'coin-box'],
-    '$': [sprite('coin')],
-    '@': [sprite('warp-pipe'), solid(), area()],
+    '=': () => [sprite('block'), solid(), area()],
+    '!': () => [sprite('goomba'), solid(), area()],
+    '^': () => [sprite('item-box'), solid(), area(), 'mushroom-box'],
+    '#': () => [sprite('item-box'), solid(), area(), 'coin-box'],
+    '$': () => [sprite('coin')],
+    '@': () => [sprite('warp-pipe'), solid(), area()],
     
-}
-
+})
+// const gameLevel = addLevel(map)
 // Score of Game
 // const scoreKeep = add([
 //     text('Test'),
@@ -94,7 +95,7 @@ function big() {
             isBig = false
         },
         biggify(time) {
-            this.sclae = vec2(2)
+            this.scale = vec2(2)
             timer = time
             isBig = true
         }
@@ -111,9 +112,9 @@ const player = add([
 ])
 
 // Spawn Coins from Surpise Blocks (Work in Progress)
-player.on("headbump", (obj) => {
+player.on("headbutt", (obj) => {
     if(obj.is('coin-box')) {
-        gameLevel.spawn('$', obj.gridPos.sub(0,1))
+        map.spawn('$', obj.gridPos.sub(0,1))
         destroy(obj)
     }
 })
@@ -134,7 +135,7 @@ keyPress('space', () => {
 })
 // Character Controls End 
 
-const gameLevel = addLevel(map, levelCfg)
+
 
 })
 // Emulates Script
