@@ -1,5 +1,6 @@
 const force_jump = 460;
-
+const force_jump_big = 550;
+const movement_speed = 120;
 
 
 
@@ -44,10 +45,10 @@ const map = addLevel(
     '                                                                ',
     '                                                                ',
     '                                                                ',
-    '                            #          ^                        ',
+    '       ^                     #                                  ',
     '                                                      @         ',
     '           !   !    $                                          =',
-    '================ ==================  ========= =================',
+    '===================================  ========= =================',
 ],
 // Sprite assignment 
  {
@@ -55,9 +56,11 @@ const map = addLevel(
     height: 20,
     '=': () => [sprite('block'), solid(), area()],
     '!': () => [sprite('goomba'), solid(), area()],
+    '*': () => [sprite('blank-box'), solid(), area()],
     '^': () => [sprite('item-box'), solid(), area(), 'mushroom-box'],
     '#': () => [sprite('item-box'), solid(), area(), 'coin-box'],
     '$': () => [sprite('coin')],
+    '%': () => [sprite('mushroom'), 'mushroom', body(), area()],
     '@': () => [sprite('warp-pipe'), solid(), area()],
     
 })
@@ -111,21 +114,39 @@ const player = add([
     origin('bot')
 ])
 
+// Grow 
+player.collides('mushroom', m =>{
+    destroy(m)
+    player.biggify(5)
+    
+})
+
+// Move spawned items
+action('mushroom', m =>{
+    m.move(10,0)
+})
+
 // Spawn Coins from Surpise Blocks (Work in Progress)
 player.on("headbutt", (obj) => {
     if(obj.is('coin-box')) {
         map.spawn('$', obj.gridPos.sub(0,1))
+        map.spawn('*', obj.gridPos.sub(0,0))
+        destroy(obj)
+    }
+    if(obj.is('mushroom-box')){
+        map.spawn('%', obj.gridPos.sub(0,1))
+        map.spawn('*', obj.gridPos.sub(0,0))
         destroy(obj)
     }
 })
 
 // Character Controls
 keyDown('left', () => {
-    player.move(-120, 0)
+    player.move(-movement_speed, 0)
 })
 
 keyDown('right', () => {
-    player.move(120, 0)
+    player.move(movement_speed, 0)
 })
 
 keyPress('space', () => {
