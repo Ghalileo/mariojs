@@ -1,6 +1,10 @@
 const force_jump = 460;
 const force_jump_big = 550;
 const movement_speed = 120;
+const enemy_speed = 20
+let current_jump_force = force_jump;
+let isJumping = true;
+const death_fall = 400;
 
 
 
@@ -32,7 +36,7 @@ loadSprite('blue-brick', '3e5YRQd.png')
 loadSprite('blue-goomba', 'SvV4ueD.png')
 loadSprite('unbreakable-block', 'gqVoI2b.png')
 
-scene("game", () => {
+scene("game", ({score}) => {
 layers(['bg', 'obj', 'ui'], 'obj')
 // Level One
 const map = addLevel(
@@ -55,27 +59,27 @@ const map = addLevel(
     width: 20,
     height: 20,
     '=': () => [sprite('block'), solid(), area()],
-    '!': () => [sprite('goomba'), solid(), area()],
+    '!': () => [sprite('goomba'), solid(), area(), 'dangerous'],
     '*': () => [sprite('blank-box'), solid(), area()],
     '^': () => [sprite('item-box'), solid(), area(), 'mushroom-box'],
     '#': () => [sprite('item-box'), solid(), area(), 'coin-box'],
-    '$': () => [sprite('coin')],
+    '$': () => [sprite('coin'), 'coin', body(), area()],
     '%': () => [sprite('mushroom'), 'mushroom', body(), area()],
     '@': () => [sprite('warp-pipe'), solid(), area()],
     
 })
 // const gameLevel = addLevel(map)
 // Score of Game
-// const scoreKeep = add([
-//     text('Test'),
-//     pos(30,6),
-//     layer('ui'),
-//     {
-//         value: 'score',
-//     }
-// ])
+const scoreKeep = add([
+    text(score),
+    pos(30,6),
+    layer('ui'),
+    {
+        value: score,
+    }
+])
 
-add([text('Level' + ' Score', pos(4,6))])
+// add([text('Level' + ' Score', pos(4,6))])
 
 // Parameters for marios growth
 function big() {
@@ -84,6 +88,7 @@ function big() {
     return{
         update() {
         if(isBig) {
+            current_jump_force=force_jump_big
             timer -= dt()
             if (timer <= 0){
                 this.smallify()
@@ -95,6 +100,7 @@ function big() {
         smallify() {
             this.scale = vec2(1) 
             timer=0
+            current_jump_force=force_jump
             isBig = false
         },
         biggify(time) {
@@ -119,6 +125,32 @@ player.collides('mushroom', m =>{
     destroy(m)
     player.biggify(5)
     
+})
+// Grab Coin plus points 
+player.collides('coin', c =>{
+    destroy(c)
+    scoreKeep.value++
+    scoreKeep.text= scoreKeep.value
+})
+
+// Sprites with the label dangerous end the game
+player.collides('dangerous', (d) =>{
+    if (isJumping){
+        destroy(d)
+    }else{
+        go('lose', {score: scoreKeep.value})
+    }
+})
+// Fall Death 
+player.action(() =>{
+    camPos(player.pos)
+    if(player.pos.y >= death_fall){
+        go('lose', {score: scoreKeep.value})
+    }
+})
+// Enemies Move
+action('dangerous', (d) =>{
+    d.move(-enemy_speed,0)
 })
 
 // Move spawned items
@@ -149,9 +181,17 @@ keyDown('right', () => {
     player.move(movement_speed, 0)
 })
 
+player.action(() =>{
+    if(player.grounded()){
+        isJumping = false
+    }
+
+})
+
 keyPress('space', () => {
     if(player.grounded()){
-        player.jump(force_jump)
+        isJumping = true
+        player.jump(current_jump_force)
     }
 })
 // Character Controls End 
@@ -159,5 +199,9 @@ keyPress('space', () => {
 
 
 })
+
+scene('lose', ({score}) =>{
+    add([text(score, 32), origin('center'), pos(width()/2, height()/2)])
+})
 // Emulates Script
-go("game")
+go("game", {score:0})
