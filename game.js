@@ -36,10 +36,11 @@ loadSprite('blue-brick', '3e5YRQd.png')
 loadSprite('blue-goomba', 'SvV4ueD.png')
 loadSprite('unbreakable-block', 'gqVoI2b.png')
 
-scene("game", ({score}) => {
+scene("game", ({level,score}) => {
 layers(['bg', 'obj', 'ui'], 'obj')
 // Level One
-const map = addLevel(
+const maps = 
+[
     [
     '                                                                ',
     '                                                                ',
@@ -49,13 +50,28 @@ const map = addLevel(
     '                                                                ',
     '                                                                ',
     '                                                                ',
-    '       ^                     #                                  ',
+    '       ^          $          #                                  ',
     '                                                      @         ',
-    '           !   !    $                                          =',
-    '===================================  ========= =================',
+    '                        !               !         !             ',
+    '================================================================',
 ],
+[
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '                                                                ',
+    '       ^          $          #                                  ',
+    '                                                      @         ',
+   'b                        !               !         !             ',
+    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+]
+]
 // Sprite assignment 
- {
+ const levelCfg = {
     width: 20,
     height: 20,
     '=': () => [sprite('block'), solid(), area()],
@@ -65,21 +81,23 @@ const map = addLevel(
     '#': () => [sprite('item-box'), solid(), area(), 'coin-box'],
     '$': () => [sprite('coin'), 'coin', body(), area()],
     '%': () => [sprite('mushroom'), 'mushroom', body(), area()],
-    '@': () => [sprite('warp-pipe'), solid(), area()],
+    '@': () => [sprite('warp-pipe'), solid(), area(), 'pipe'],
+    'b': () => [sprite('blue-brick'), scale(0.5), solid(), area()],
     
-})
-// const gameLevel = addLevel(map)
+}
+const gameLevel = addLevel(maps[level], levelCfg)
 // Score of Game
 const scoreKeep = add([
     text(score),
-    pos(30,6),
+    pos(10,60),
     layer('ui'),
     {
         value: score,
     }
 ])
 
-// add([text('Level' + ' Score', pos(4,6))])
+// Display Current Leve 2
+add([text('level' + parseInt(level + 1, pos(4, 6)))])
 
 // Parameters for marios growth
 function big() {
@@ -127,7 +145,7 @@ player.collides('mushroom', m =>{
     
 })
 // Grab Coin plus points 
-player.collides('coin', c =>{
+player.collides('coin', (c) =>{
     destroy(c)
     scoreKeep.value++
     scoreKeep.text= scoreKeep.value
@@ -140,6 +158,15 @@ player.collides('dangerous', (d) =>{
     }else{
         go('lose', {score: scoreKeep.value})
     }
+})
+// Transistion to next level
+player.collides('pipe', () =>{
+    keyPress('down', () => {
+        go('game', {
+            level: (level + 1),
+            score: scoreKeep.value
+        })
+    })
 })
 // Fall Death 
 player.action(() =>{
@@ -161,13 +188,13 @@ action('mushroom', m =>{
 // Spawn Coins from Surpise Blocks (Work in Progress)
 player.on("headbutt", (obj) => {
     if(obj.is('coin-box')) {
-        map.spawn('$', obj.gridPos.sub(0,1))
-        map.spawn('*', obj.gridPos.sub(0,0))
+        gameLevel.spawn('$', obj.gridPos.sub(0,1))
+        gameLevel.spawn('*', obj.gridPos.sub(0,0))
         destroy(obj)
     }
     if(obj.is('mushroom-box')){
-        map.spawn('%', obj.gridPos.sub(0,1))
-        map.spawn('*', obj.gridPos.sub(0,0))
+        gameLevel.spawn('%', obj.gridPos.sub(0,1))
+        gameLevel.spawn('*', obj.gridPos.sub(0,0))
         destroy(obj)
     }
 })
@@ -204,4 +231,4 @@ scene('lose', ({score}) =>{
     add([text(score, 32), origin('center'), pos(width()/2, height()/2)])
 })
 // Emulates Script
-go("game", {score:0})
+go("game", {level:0,score:0})
