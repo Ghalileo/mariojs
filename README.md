@@ -20,7 +20,8 @@
   Git Clone to Local Machine. 
 
   # Static Server to load sounds
-  Run: python3 -m http.server 
+  In project root directory, Run: python3 -m http.server 
+
   Visit web address: http://localhost:8000/index.html to see application.  
 
   
