@@ -69,14 +69,11 @@ const maps =
     'b                                                                ',
     'b                                                                ',
     'b                                                                ',
-    'b                                                               ',
     'b                                                                ',
     'b                                                                ',
     'b                                                                ',
-    'b       ^          $          #                                  ',
-    'b                                                      @         ',
-    'b                        G               G         G             ',
-    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+    'b                     G             G       G                    ',
+    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
 ]
 ]
 // Sprite assignment 
