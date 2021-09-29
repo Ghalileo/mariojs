@@ -8,6 +8,8 @@ const death_fall = 400;
 
 
 
+
+
 kaboom({
     global: true, 
     fullscreen: true,
@@ -15,6 +17,9 @@ kaboom({
     debug: true,
     clearColor: [0,0,1,1]
 })
+
+// Local Sprite
+loadSound('pinapark', '/assets/pinaparkbeach.mp3');
 
 // Sprite Loading from Src
 loadRoot('https://i.imgur.com/')
@@ -36,8 +41,12 @@ loadSprite('blue-brick', '3e5YRQd.png')
 loadSprite('blue-goomba', 'SvV4ueD.png')
 loadSprite('unbreakable-block', 'gqVoI2b.png')
 
+// Level Music Control
+
 scene("game", ({level,score}) => {
 layers(['bg', 'obj', 'ui'], 'obj')
+const music = play("pinapark", { loop: true, });
+
 // Level One
 const maps = 
 [
@@ -56,17 +65,17 @@ const maps =
     '================================================================',
 ],
 [
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '                                                                ',
-    '       ^          $          #                                  ',
-    '                                                      @         ',
-   'b                        !               !         !             ',
+    'b                                                                ',
+    'b                                                                ',
+    'b                                                                ',
+    'b                                                                ',
+    'b                                                               ',
+    'b                                                                ',
+    'b                                                                ',
+    'b                                                                ',
+    'b       ^          $          #                                  ',
+    'b                                                      @         ',
+    'b                        G               G         G             ',
     'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
 ]
 ]
@@ -76,6 +85,7 @@ const maps =
     height: 20,
     '=': () => [sprite('block'), solid(), area()],
     '!': () => [sprite('goomba'), solid(), area(), 'dangerous'],
+    'G': () => [sprite('blue-goomba'), solid(), area(), 'dangerous'],
     '*': () => [sprite('blank-box'), solid(), area()],
     '^': () => [sprite('item-box'), solid(), area(), 'mushroom-box'],
     '#': () => [sprite('item-box'), solid(), area(), 'coin-box'],
@@ -96,7 +106,10 @@ const scoreKeep = add([
     }
 ])
 
-// Display Current Leve 2
+
+
+
+// Display Current Level 
 add([text('level' + parseInt(level + 1, pos(4, 6)))])
 
 // Parameters for marios growth
