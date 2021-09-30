@@ -72,8 +72,11 @@ const maps =
     'b                                                                ',
     'b                                                                ',
     'b                                                                ',
-    'b                     G             G       G                    ',
-    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+    'b                                                                ',
+    'b       ^                     #                                  ',
+    'b                                                      @         ',
+    'b                        G               !         G             ',
+    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
 ]
 ]
 // Sprite assignment 
@@ -82,7 +85,7 @@ const maps =
     height: 20,
     '=': () => [sprite('block'), solid(), area()],
     '!': () => [sprite('goomba'), solid(), area(), 'dangerous'],
-    'G': () => [sprite('blue-goomba'), solid(), area(), 'dangerous'],
+    'G': () => [sprite('blue-goomba'), scale(0.5),solid(), area(), 'dangerous'],
     '*': () => [sprite('blank-box'), solid(), area()],
     '^': () => [sprite('item-box'), solid(), area(), 'mushroom-box'],
     '#': () => [sprite('item-box'), solid(), area(), 'coin-box'],
@@ -192,7 +195,7 @@ action('dangerous', (d) =>{
 
 // Move spawned items
 action('mushroom', m =>{
-    m.move(10,0)
+    m.move(20,0)
 })
 
 // Spawn Coins from Surpise Blocks (Work in Progress)
