@@ -45,7 +45,9 @@ loadSprite('unbreakable-block', 'gqVoI2b.png')
 
 scene("game", ({level,score}) => {
 layers(['bg', 'obj', 'ui'], 'obj')
-const music = play("pinapark", { loop: true, });
+const music = play("pinapark", { volume: 0.5, loop: true, });
+
+
 
 // Level One
 const maps = 
@@ -236,6 +238,10 @@ keyPress('space', () => {
 })
 // Character Controls End 
 
+// Logic to Control music.  Work in progress.
+// if(maps.[1]) {
+//     music.pause()
+// }
 
 
 })
