@@ -78,7 +78,7 @@ const maps =
     'b       ^                     #                                  ',
     'b                                                      @         ',
     'b                        G               !         G             ',
-    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
 ]
 ]
 // Sprite assignment 
@@ -239,9 +239,9 @@ keyPress('space', () => {
 // Character Controls End 
 
 // Logic to Control music.  Work in progress.
-// if(maps.[1]) {
-//     music.pause()
-// }
+if(maps[2]) {
+    music.pause()
+}
 
 
 })
