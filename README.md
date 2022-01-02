@@ -15,6 +15,8 @@
   Contribution |
   Licensing |
   
+  # Dependancies 
+  Python3
 
   # Installation 
   Git Clone to Local Machine. 
